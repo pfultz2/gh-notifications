@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    </head>
+    <body>
+    {% for group in groups %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{ group }}
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for event in groups[group][:10] %}
+                    <li class="list-group-item"><a href="{{ event.get_url() }}">
+                        <div class="row">
+                            <div class="col-md-7">{{ event.get_title() }}</div>
+                            <div class="col-md-3">{{ event.get_timeago() }}</div>
+                            <div class="col-md-1"><img src="{{ event.get_avatar() }}" width="20" height="20"></img></div>
+                        </div>
+                    </a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+    </body>
+</html>
