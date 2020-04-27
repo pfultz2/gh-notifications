@@ -120,6 +120,12 @@ class GithubNotifications:
         mkdir(self.get_config_path())
         pickle.dump(self.events, open(self.get_event_file(), 'wb'))
 
+    def remove_stale_events(self):
+        oldest = datetime.datetime.now() - datetime.timedelta(days=90)
+        for event_id, event in self.events.items():
+            if event.get_date() < oldest:
+                del self.events[event_id]
+
     def get_events(self):
         return self.events.values()
 
@@ -165,6 +171,7 @@ def index():
         return redirect(url_for('login'))
     gn = GithubNotifications(session['username'], session['token'])
     gn.load_events()
+    gn.remove_stale_events()
     gn.query_events()
     gn.save_events()
     return render_template('index.html', groups=gn.group_events())
